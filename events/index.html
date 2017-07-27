@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shopping Cart | Alex Hernandez</title>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+</head>
+<body>
+
+  <div id="app">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-8">
+          <div class="row">
+            <div class="col-sm-12">
+              <br><br>
+              <h1>Amazon</h1>
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus voluptate, ad voluptas. Minus, molestias quaerat qui enim. Nam pariatur, assumenda veniam rerum cupiditate inventore delectus error, illo natus eius, quia.</p>
+              <br><br>
+            </div>
+            <div v-for="product in products" class="col-sm-6">
+              <div class="card" style="margin-bottom: 20px;">
+                <div class="card-block">
+                  <img class="card-img-top" data-src="holder.js/100px180/" alt="100%x180" style="height: 180px; width: 100%; display: block;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22318%22%20height%3D%22180%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20318%20180%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_15d85537d8b%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A16pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_15d85537d8b%22%3E%3Crect%20width%3D%22318%22%20height%3D%22180%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22118.0859375%22%20y%3D%2297.35%22%3E318x180%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true">
+                  <br>
+                  <h4 class="card-title">{{ product.title }} <small class="text-success">${{ product.cost }}</small></h4>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <a href="#" class="btn btn-primary" @click.prevent="addToCart(product)">Buy</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <br><br>
+          <h2>Cart</h2>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in cart">
+                <td>{{ item.title }}</td>
+                <td>${{ item.cost }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div><strong>Total: ${{ total }}</strong></div>
+          <div><button id="discount" class="btn btn-warning">Discount</button></div>
+        </div>
+      </div>
+    </div>
+    <br><br><br>
+  </div>
+
+  <script src="https://unpkg.com/vue"></script>
+  <script>
+  var app = new Vue({
+    el: '#app',
+    data: {
+      products: [
+        { title: "PS4", cost: 499 },
+        { title: "XBOX", cost: 399 },
+        { title: "Nintendo Switch", cost: 299 },
+        { title: "SEGA", cost: 499 },
+        { title: "DreamCast", cost: 399 },
+        { title: "Genesis", cost: 299 },
+      ],
+      cart: [],
+    },
+    computed: {
+      total(){
+        return this.cart.reduce(function(total, value){
+          return total + value.cost;
+        }, 0);
+      }
+    },
+    methods: {
+      addToCart(item){
+        this.cart.push(item);
+      },
+      discount(){
+        this.products.forEach(function(item){
+          item.cost = item.cost / 2;
+        });
+      }
+    }
+  });
+
+    function Emitter() {
+      this.events = {}
+    };
+
+    Emitter.prototype.on = function(type, listener){
+      this.events[type] = this.events[type] || [];
+      this.events[type].push(listener);
+    };
+
+    Emitter.prototype.emit = function(type){
+      if (this.events[type]) {
+        this.events[type].forEach(function(event){
+          event();
+        });
+      }
+    };
+
+    var Events = new Emitter();
+
+    Events.on('discount', function(){
+      this.app.discount();
+    });
+
+    // LET'S FORCE A FAKE BACK-END EVENT
+    document.getElementById("discount").addEventListener("click", function(){
+      Events.emit('discount');
+    });
+
+  </script>
+</body>
+</html>
